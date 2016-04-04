@@ -16,8 +16,14 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def password_update
-    @model = current_user.is_a?(Teacher) ? :teacher : :admin
+    @model = current_user.is_a?(Admin) ? :admin : :teacher
     @user_id = current_user.id
+  end
+
+  def password_reset
+    @token = params[:reset_password_token]
+    uri = request.env["PATH_INFO"].split('.')[0]
+    @model = uri == edit_admin_password_path ? :admins : :teachers
   end
 
   protected
